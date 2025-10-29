@@ -1,0 +1,28 @@
+{
+  "name": "med-analytics-dashboard",
+  "version": "1.0.0",
+  "description": "Healthcare Analytics Dashboard - MVP showcasing Backend Engineering Skills",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "backend:dev": "cd apps/backend && npm run start:dev",
+    "frontend:dev": "cd apps/frontend && npm run dev",
+    "backend:build": "cd apps/backend && npm run build",
+    "frontend:build": "cd apps/frontend && npm run build",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "db:migrate": "cd apps/backend && npm run migration:run"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "author": "Ayokunle Ademola-John",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ayothedoc3/med-analytics-dashboard"
+  }
+}
