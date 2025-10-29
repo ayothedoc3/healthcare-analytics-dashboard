@@ -5,9 +5,9 @@ services:
     image: postgres:15-alpine
     container_name: med-analytics-db
     environment:
-      POSTGRES_USER: meduser
-      POSTGRES_PASSWORD: medpass123
-      POSTGRES_DB: med_analytics
+      POSTGRES_USER: ${DB_USER:-meduser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-medpass123}
+      POSTGRES_DB: ${DB_NAME:-med_analytics}
     ports:
       - "5432:5432"
     volumes:
@@ -26,9 +26,9 @@ services:
     environment:
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      DATABASE_USER: meduser
-      DATABASE_PASSWORD: medpass123
-      DATABASE_NAME: med_analytics
+      DATABASE_USER: ${DB_USER:-meduser}
+      DATABASE_PASSWORD: ${DB_PASSWORD:-medpass123}
+      DATABASE_NAME: ${DB_NAME:-med_analytics}
       PORT: 4000
     ports:
       - "4000:4000"

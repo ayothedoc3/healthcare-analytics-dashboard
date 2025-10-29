@@ -15,8 +15,8 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_USER: meduser
-          POSTGRES_PASSWORD: medpass123
+          POSTGRES_USER: ${{ secrets.TEST_DB_USER || 'testuser' }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD || 'testpass' }}
           POSTGRES_DB: med_analytics_test
         options: >-
           --health-cmd pg_isready
@@ -51,8 +51,8 @@ jobs:
         env:
           DATABASE_HOST: localhost
           DATABASE_PORT: 5432
-          DATABASE_USER: meduser
-          DATABASE_PASSWORD: medpass123
+          DATABASE_USER: ${{ secrets.TEST_DB_USER || 'testuser' }}
+          DATABASE_PASSWORD: ${{ secrets.TEST_DB_PASSWORD || 'testpass' }}
           DATABASE_NAME: med_analytics_test
 
       - name: Build backend

@@ -1,15 +1,34 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS
+  // Security headers
+  app.use(helmet({
+    contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+    crossOriginEmbedderPolicy: false,
+  }));
+
+  // Enable CORS with strict configuration
+  const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:3000'];
+
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Global validation pipe
@@ -24,23 +43,25 @@ async function bootstrap() {
   // API prefix
   app.setGlobalPrefix('api');
 
-  // Swagger documentation
-  const config = new DocumentBuilder()
-    .setTitle('Medical Analytics Dashboard API')
-    .setDescription(
-      'RESTful API for healthcare analytics dashboard with real-time metrics and reporting',
-    )
-    .setVersion('1.0')
-    .addTag('Analytics', 'Healthcare analytics and reporting endpoints')
-    .setContact(
-      'Ayokunle Ademola-John',
-      'https://github.com/ayothedoc3',
-      'ayothedoc3@gmail.com',
-    )
-    .build();
+  // Swagger documentation (only in non-production)
+  if (process.env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('Medical Analytics Dashboard API')
+      .setDescription(
+        'RESTful API for healthcare analytics dashboard with real-time metrics and reporting',
+      )
+      .setVersion('1.0')
+      .addTag('Analytics', 'Healthcare analytics and reporting endpoints')
+      .setContact(
+        'Ayokunle Ademola-John',
+        'https://github.com/ayothedoc3',
+        'ayothedoc3@gmail.com',
+      )
+      .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
   const port = process.env.PORT || 4000;
   await app.listen(port);
