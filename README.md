@@ -1,3 +1,4 @@
+<img width="1265" height="696" alt="image" src="https://github.com/user-attachments/assets/1c55daa8-48df-4cd0-aad8-ab1a030c5b4c" />
 # Medical Analytics Dashboard MVP
 
 A production-ready healthcare analytics dashboard showcasing full-stack development expertise with modern technologies.
